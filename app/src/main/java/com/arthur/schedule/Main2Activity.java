@@ -1,5 +1,7 @@
 package com.arthur.schedule;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +18,10 @@ import android.widget.Toast;
 
 public class Main2Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private FinishedFragment fFrag;
+    private OnDoingFragment onDoFrag;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +45,18 @@ public class Main2Activity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        setDefaultFragment();
+    }
+
+    private void setDefaultFragment() {
+        FragmentManager fManager = getFragmentManager();
+        FragmentTransaction fTrans = fManager.beginTransaction();
+        onDoFrag = new OnDoingFragment();
+        fTrans.add(R.id.fragment_content,onDoFrag);
+        fTrans.commit();
     }
 
     @Override
@@ -69,27 +85,39 @@ public class Main2Activity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(Main2Activity.this,"setting",Toast.LENGTH_LONG).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        FragmentManager fragManager = getFragmentManager();
+        FragmentTransaction fragTrans = fragManager.beginTransaction();
         int id = item.getItemId();
 
         if (id == R.id.ondoing) {
             // Handle the camera action
-            Toast.makeText(this,"ON Doing",Toast.LENGTH_SHORT).show();
+            if(onDoFrag==null)
+                onDoFrag = new OnDoingFragment();
+            fragTrans.replace(R.id.fragment_content,onDoFrag);
+            Toast.makeText(Main2Activity.this,"ON Doing",Toast.LENGTH_LONG).show();
         } else if (id == R.id.finished) {
-            Toast.makeText(this,"Finished",Toast.LENGTH_SHORT).show();
+            if (fFrag==null)
+                fFrag = new FinishedFragment();
+            fragTrans.replace(R.id.fragment_content,fFrag);
+
+            Toast.makeText(Main2Activity.this,"Finished",Toast.LENGTH_LONG).show();
         }
 
+        navigationView.getMenu().findItem(id).setChecked(true);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        fragTrans.commit();
+        return false;
     }
 }
