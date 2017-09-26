@@ -1,12 +1,20 @@
-package com.arthur.schedule;
+package com.arthur.schedule.OnFinished;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.arthur.schedule.R;
+import com.arthur.schedule.bean.Data;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,13 +65,35 @@ public class FinishedFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        initDatas();
+    }
+
+    private HomeAdapter mAdapter;
+    private Context context;
+    private ArrayList<Data> mDatas;
+
+
+    public void setContext(Context con) {
+        this.context = con;
+    }
+
+    private void initDatas() {
+        //TODO init datas there, may from database
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_finished, container, false);
+        View view = inflater.inflate(R.layout.fragment_finished, container, false);
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.finish_recycle);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.setAdapter(mAdapter = new HomeAdapter(mDatas,context));
+        recyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL_LIST));
+
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -95,7 +125,7 @@ public class FinishedFragment extends Fragment {
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

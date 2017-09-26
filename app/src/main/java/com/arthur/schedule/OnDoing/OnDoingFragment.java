@@ -1,4 +1,4 @@
-package com.arthur.schedule;
+package com.arthur.schedule.OnDoing;
 
 import android.content.Context;
 import android.net.Uri;
@@ -7,6 +7,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.arthur.schedule.R;
 
 
 /**
@@ -58,6 +60,13 @@ public class OnDoingFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+    }
+
+    private Context context;
+
+    public void setContext(Context con){
+        this.context = con;
     }
 
     @Override
